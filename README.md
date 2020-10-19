@@ -6,15 +6,18 @@ This problem emerged while we were trying to make a simple prototype of a 3rd pe
 
 # The Setup
 
-For each of the pipelines (URP, HDRP and Built-in), a default project for that pipeline was created from Unity Hub's launcher. On a new scene, we added Unity's default plane and cube 3D objects, a directional light for minimal fill-light, and a spotlight, pointed towards the wall:
+For each of the pipelines (URP, HDRP and Built-in), a default project for that pipeline was created from Unity Hub's launcher. All settings for shadow strength, distance, and resolution were the same as the default settings.
+
+On a new scene, we added Unity's default plane and cube 3D objects, a directional light for minimal fill-light, and a spotlight, pointed towards the wall:
 
 ![Image of the scene setup](./ReadmeImages/SceneSetup1.png)
 
-# The problem
+# The Problem
 
 When the wall is animated, both in URP and Built-in pipelines, the spotlight is able to go through the middle of the wall.
 
 Built-in pipeline:
+The problem happens when using either Deferred or Forward rendering.
 
 ![Built-in results](./ReadmeImages/BuiltIn.gif)
 
@@ -24,9 +27,11 @@ URP:
 
 # HDRP does not show the same issue
 
-HDRP seems to calculate shadowmaps every frame when a light is marked to do so. Either this or the ShadowCaster portion of the HDRP shaders seem to prevent the issue that happens in URP and Built-in, but this is just a suspicion, as it is very difficult to debug this.
+HDRP does not show the same issue when using either Deferred or Forward rendering.
 
 ![HDRP results](./ReadmeImages/HDRP.gif)
+
+HDRP seems to calculate shadowmaps every frame when a light is marked to do so. Either this or the ShadowCaster portion of the HDRP shaders seem to prevent the issue that happens in URP and Built-in, but this is just a suspicion, as it is very difficult to debug this.
 
 # Final Considerations
 
