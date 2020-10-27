@@ -1,3 +1,34 @@
+# UPDATES!
+
+We opened a bug in Unity's bug tracker, and got a reply with a fix. If you reached this page looking for a solution for this problem, you can change `Packages/Universal RP/Shaders/ShadowCasterPass.hlsl` in this way:
+
+```glsl
+float4 GetShadowPositionHClip(Attributes input)
+{
+    float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
+
+    float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
+
+#if UNITY_REVERSED_Z
+    // COMMENT THE LINE BELOW:
+    //positionCS.z = min(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+#else
+    positionCS.z = max(positionCS.z, positionCS.w * UNITY_NEAR_CLIP_VALUE);
+#endif
+
+    return positionCS;
+}
+```
+
+This change eliminated the issue in URP for us. We still don't know how to fix this in the Built-in pipeline, or if this will be integated in upcoming URP releases. You can follow this thread to get more updates in this subject here:
+
+https://fogbugz.unity3d.com/default.asp?1286234_tah6nrs91m7vbrmk
+
+Thanks to all the gamedev friends and Unity's team who helped us work around this problem!
+
+---
+
 # Context
 
 We're using Unity 2019.4 for this demonstration as it is the current LTS version for Unity. The problem described here also happens in Unity 2020.1 using the same setup.
